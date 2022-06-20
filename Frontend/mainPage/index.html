@@ -23,7 +23,7 @@
   </head>
   <body>
     <div class="container">
-      <button class="button" onclick="loadLast()">Refresh</button>
+      <button class="button" onclick="loadAll()">Refresh</button>
       <!-- <form class="addForm">
         <input type="text" name="name" id="name" />
         <button type="button" class="button" onclick="add()">Add</button>
@@ -35,8 +35,11 @@
       </form>
     </div>
     <div class="table">
+      <div class="path" id="path">/root/</div>
       <div class="caption">
         <div class="name">Name:</div>
+        <div class="type">Type:</div>
+        <div class="parent">Parent:</div>
         <div class="date">Date:</div>
       </div>
       <div class="items"></div>

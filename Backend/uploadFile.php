@@ -1,9 +1,6 @@
 <?php
 // Include the database configuration file
-$servername = "localhost";
-$username = "FileManager";
-$password = "QwertY54321";
-$dbname = "filemanager";
+include "./api.php";
 
 $targetDir = "./uploads/";
 $fileName = basename($_FILES["file"]["name"]);
@@ -23,10 +20,13 @@ if(!move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
   die("There was an error while uploading your file!");
 }
 
-echo "Successfully uploaded file!";
-// $insert = $db->query("INSERT into images (file_name, uploaded_on) VALUES ('".$fileName."', NOW())");
-// if($insert){
-//   $echo = "The file ".$fileName. " has been uploaded successfully.";
-// }else{
-//   $echo = "File upload failed, please try again.";
-// } 
+$sql = "INSERT INTO root (name, type, parent)
+VALUES ('$fileName', 'File', NULL)";
+
+$result = requset($sql);
+
+if (!$result) {
+  die("File upload failed, please try again!");
+}
+
+echo "The file ".$fileName. " has been successfully uploaded!";

@@ -53,24 +53,31 @@ body {
 }
 
 .caption {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 50px;
+  align-items: center;
   width: 100%;
-  height: fit-content;
-  background-color: aliceblue;
+  height: 50px;
+  background-color: white;
   font-size: 20px;
   font-weight: bolder;
+  padding: 0 5px;
+  box-shadow: 0 0 3px grey;
+  margin-bottom: 5px;
 }
 
 .item {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 50px;
+  align-items: center;
   width: 100%;
-  height: fit-content;
+  height: 50px;
   font-size: 20px;
+  padding: 0 10px;
+  background-color: aliceblue;
 }
 
-.name {
+/* .name {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -86,17 +93,22 @@ body {
   height: 100%;
   width: 50%;
   padding: 10px 0;
-}
+} */
 
 .removeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: white;
-  padding: 4px 17px;
+  /* padding: 4px 17px; */
   border-radius: 50%;
   border: 1px solid #333;
   font-size: 30px;
-  margin: -7px 0;
+  /* margin: -7px 0; */
   transition: 0.1s;
   cursor: pointer;
+  width: 40px;
+  height: 40px;
 }
 
 .removeButton:hover {

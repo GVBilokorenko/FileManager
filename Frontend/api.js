@@ -23,20 +23,6 @@ function loadLast() {
   });
 }
 
-function add() {
-  let name = document.querySelector("#name").value;
-  let formData = "name=" + name;
-
-  $.ajax({
-    type: "post",
-    url: `${backendLocation}/addData.php`,
-    data: formData,
-    success: results => {
-      loadLast();
-    }
-  });
-}
-
 function addFile() {
   let file = document.querySelector("#file").files[0];
   var formData = new FormData();
@@ -50,8 +36,7 @@ function addFile() {
     cache: false,
     processData: false,
     success: results => {
-      // loadLast();
-      console.log(results);
+      loadLast();
     }
   });
 }
@@ -79,6 +64,17 @@ function createCard(el) {
   name.innerHTML = `${el.name}`;
   item.appendChild(name);
 
+  let type = document.createElement("div");
+  type.className = "type";
+  type.innerHTML = `${el.type}`;
+  item.appendChild(type);
+
+  let parent = document.createElement("div");
+  parent.className = "parent";
+
+  parent.innerHTML = `${el.parent ? el.parent : "root"}`;
+  item.appendChild(parent);
+
   let date = document.createElement("div");
   date.className = "date";
   date.innerHTML = `${el.date}`;
@@ -90,7 +86,7 @@ function createCard(el) {
   button.onclick = () => {
     remove(item);
   };
-  date.appendChild(button);
+  item.appendChild(button);
 
   document.querySelector(".items").appendChild(item);
 }

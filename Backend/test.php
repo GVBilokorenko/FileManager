@@ -11,19 +11,19 @@ if (!$conn) {
   die("Connection failed: " . mysqli_connect_error());
 }
 
-// $sql = "CREATE TABLE test(
-//   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-//   name VARCHAR(30) NOT NULL,
-//   type VARCHAR(30) NOT NULL,
-//   parent VARCHAR(30) DEFAULT 'root',
-//   date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-// )";
+$sql = "CREATE TABLE root(
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(30) NOT NULL,
+  type VARCHAR(30) NOT NULL,
+  parent INT DEFAULT NULL,
+  date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
 // $sql = "INSERT INTO test (name, type)
 // VALUES ('Project', 'Folder')";
 // $sql = "SELECT id, name, type, parent, date 
 // from test 
 // where parent in ('root');";
-// $sql = "DROP TABLE test";
+// $sql = "DROP TABLE root";
 
 $result = mysqli_query($conn, $sql);
 
