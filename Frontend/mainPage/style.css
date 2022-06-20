@@ -52,6 +52,18 @@ body {
   height: fit-content;
 }
 
+.path {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #333;
+  width: 100%;
+  color: #eee;
+  padding: 10px;
+  box-shadow: 0 0 3px #eee;
+  font-size: 20px;
+}
+
 .caption {
   display: grid;
   grid-template-columns: repeat(4, 1fr) 50px;
@@ -77,23 +89,16 @@ body {
   background-color: aliceblue;
 }
 
-/* .name {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%;
-  width: 50%;
-  padding: 10px 0;
+.folder {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: blue;
+  transition: 0.1s;
 }
 
-.date {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  width: 50%;
-  padding: 10px 0;
-} */
+.folder:hover {
+  color: darkblue;
+}
 
 .removeButton {
   display: flex;

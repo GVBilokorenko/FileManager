@@ -1,8 +1,19 @@
 <?php
 include "./api.php";
 
-$sql = "SELECT id, name, type, parent, date FROM root";
+$path = $_POST["path"];
+if ($path === "root"){
+    $path = -1;
+}
+
+// echo $path;
+
+$sql = "SELECT id, name, type, parent, date 
+from root 
+where parent in ($path) 
+ORDER BY type DESC;";
 $result = requset($sql);
+
 
 if (mysqli_num_rows($result) > 0) {
     $resArr = [];
@@ -11,5 +22,5 @@ if (mysqli_num_rows($result) > 0) {
     }
     echo json_encode($resArr);
 } else {
-    echo "0 results";
+    echo null;
 }

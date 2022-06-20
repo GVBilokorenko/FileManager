@@ -21,7 +21,7 @@ if(!move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
 }
 
 $sql = "INSERT INTO root (name, type, parent)
-VALUES ('$fileName', 'File', NULL)";
+VALUES ('$fileName', 'File', -1)";
 
 $result = requset($sql);
 

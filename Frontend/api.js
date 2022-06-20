@@ -1,15 +1,24 @@
 const backendLocation = "../../Backend";
 
-window.onload = loadAll();
+window.onload = loadAll("firstLoad");
 
-function loadAll() {
+function loadAll(path) {
+  path = getPath(path);
+  let formData = "path=" + path;
+
   $.ajax({
+    type: "post",
     url: `${backendLocation}/getAllData.php`,
+    data: formData,
     success: result => {
       document.querySelector(".items").innerHTML = "";
-      JSON.parse(result).map(el => {
-        createCard(el);
-      });
+      if (result === "") {
+        document.querySelector(".items").innerHTML = "Empty";
+      } else {
+        JSON.parse(result).map(el => {
+          createCard(el);
+        });
+      }
     }
   });
 }
@@ -25,7 +34,7 @@ function loadLast() {
 
 function addFile() {
   let file = document.querySelector("#file").files[0];
-  var formData = new FormData();
+  let formData = new FormData();
   formData.append("file", file);
 
   $.ajax({
@@ -37,6 +46,20 @@ function addFile() {
     processData: false,
     success: results => {
       loadLast();
+    }
+  });
+}
+
+function addFolder() {
+  let name = document.querySelector("#name").value;
+  let formData = { path: getPath(path), name: name };
+
+  $.ajax({
+    type: "post",
+    url: `${backendLocation}/addFolder.php`,
+    data: formData,
+    success: results => {
+      loadAll();
     }
   });
 }
@@ -60,8 +83,11 @@ function createCard(el) {
   item.className = "item";
 
   let name = document.createElement("div");
-  name.className = "name";
+  name.className = el.type == "Folder" ? "name folder" : "name file";
   name.innerHTML = `${el.name}`;
+  name.onclick = () => {
+    setPath(el.id);
+  };
   item.appendChild(name);
 
   let type = document.createElement("div");
@@ -72,7 +98,7 @@ function createCard(el) {
   let parent = document.createElement("div");
   parent.className = "parent";
 
-  parent.innerHTML = `${el.parent ? el.parent : "root"}`;
+  parent.innerHTML = `${el.parent == -1 ? "root" : el.parent}`;
   item.appendChild(parent);
 
   let date = document.createElement("div");
@@ -89,4 +115,30 @@ function createCard(el) {
   item.appendChild(button);
 
   document.querySelector(".items").appendChild(item);
+}
+
+function getPath(path) {
+  if (path !== "firstLoad") {
+    path = document.querySelector("#path").innerHTML.split("/");
+    path = path[path.length - 2];
+  } else {
+    path = "root";
+  }
+  return path;
+}
+
+function setPath(path) {
+  document.querySelector("#path").innerHTML += `${path}/`;
+  loadAll();
+}
+
+function pathBack(path = document.querySelector("#path").innerHTML) {
+  if (document.querySelector("#path").innerHTML !== "./root/") {
+    path = document.querySelector("#path").innerHTML.split("/");
+    path.pop();
+    path.pop();
+    path = path.join("/") + "/";
+    document.querySelector("#path").innerHTML = path;
+    loadAll();
+  }
 }
