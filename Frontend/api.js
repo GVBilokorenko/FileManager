@@ -62,11 +62,11 @@ function createCard(el) {
   item.id = `item${el.id}`;
   item.className = "item";
 
-  let name = document.createElement("div");
+  let name = document.createElement("input");
   name.className = el.type == "Folder" ? "name folder" : "name file";
-  name.innerHTML = `${el.name}`;
-  name.onclick = () => {
-    setPath(el.id, el.name);
+  name.placeholder = `${el.name}`;
+  name.ondblclick = () => {
+    setPath(el);
   };
   item.appendChild(name);
 
@@ -86,13 +86,21 @@ function createCard(el) {
   date.innerHTML = `${el.date}`;
   item.appendChild(date);
 
-  let button = document.createElement("button");
-  button.className = "removeButton";
-  button.innerHTML = "-";
-  button.onclick = () => {
+  let editButton = document.createElement("button");
+  editButton.className = "removeButton";
+  editButton.innerHTML = "e";
+  editButton.onclick = () => {
+    rename(item, name.value);
+  };
+  item.appendChild(editButton);
+
+  let remButton = document.createElement("button");
+  remButton.className = "removeButton";
+  remButton.innerHTML = "-";
+  remButton.onclick = () => {
     remove(item);
   };
-  item.appendChild(button);
+  item.appendChild(remButton);
 
   document.querySelector(".items").appendChild(item);
 }
@@ -107,10 +115,12 @@ function getPath(path) {
   return path;
 }
 
-function setPath(id, name) {
-  document.querySelector("#path").innerHTML += `${id}/`;
-  document.querySelector("#showPath").innerHTML += `${name}/`;
-  loadAll();
+function setPath(item) {
+  if (item.type == "Folder") {
+    document.querySelector("#path").innerHTML += `${item.id}/`;
+    document.querySelector("#showPath").innerHTML += `${item.name}/`;
+    loadAll();
+  }
 }
 
 function pathBack(path = document.querySelector("#path").innerHTML) {
@@ -162,4 +172,18 @@ function remove(item) {
       }
     });
   }, 1000);
+}
+
+function rename(item, value) {
+  let id = item.id.slice(4);
+  let formData = { id: id, name: value };
+
+  $.ajax({
+    type: "post",
+    url: `${backendLocation}/renameData.php`,
+    data: formData,
+    success: results => {
+      loadAll();
+    }
+  });
 }
