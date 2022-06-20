@@ -66,7 +66,7 @@ function createCard(el) {
   name.className = el.type == "Folder" ? "name folder" : "name file";
   name.innerHTML = `${el.name}`;
   name.onclick = () => {
-    setPath(el.id);
+    setPath(el.id, el.name);
   };
   item.appendChild(name);
 
@@ -107,8 +107,9 @@ function getPath(path) {
   return path;
 }
 
-function setPath(path) {
-  document.querySelector("#path").innerHTML += `${path}/`;
+function setPath(id, name) {
+  document.querySelector("#path").innerHTML += `${id}/`;
+  document.querySelector("#showPath").innerHTML += `${name}/`;
   loadAll();
 }
 
@@ -119,6 +120,7 @@ function pathBack(path = document.querySelector("#path").innerHTML) {
     path.pop();
     path = path.join("/") + "/";
     document.querySelector("#path").innerHTML = path;
+    document.querySelector("#showPath").innerHTML = path;
     loadAll();
   }
 }
