@@ -37,6 +37,25 @@ function add() {
   });
 }
 
+function addFile() {
+  let file = document.querySelector("#file").files[0];
+  var formData = new FormData();
+  formData.append("file", file);
+
+  $.ajax({
+    type: "post",
+    url: `${backendLocation}/uploadFile.php`,
+    data: formData,
+    contentType: false,
+    cache: false,
+    processData: false,
+    success: results => {
+      // loadLast();
+      console.log(results);
+    }
+  });
+}
+
 function remove(item) {
   let formData = "id=" + item.id.slice(4);
 
