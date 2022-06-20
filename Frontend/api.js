@@ -57,19 +57,6 @@ function addFolder() {
   });
 }
 
-function remove(item) {
-  let formData = { id: item.id.slice(4), type: item.type };
-
-  $.ajax({
-    type: "post",
-    url: `${backendLocation}/delData.php`,
-    data: formData,
-    success: results => {
-      item.parentElement.removeChild(item);
-    }
-  });
-}
-
 function createCard(el) {
   let item = document.createElement("div");
   item.id = `item${el.id}`;
@@ -134,4 +121,43 @@ function pathBack(path = document.querySelector("#path").innerHTML) {
     document.querySelector("#path").innerHTML = path;
     loadAll();
   }
+}
+
+function scanFolder(id, type, delArr = []) {
+  delArr.push(id);
+  if (type == "Folder") {
+    let formData = "path=" + id;
+
+    $.ajax({
+      type: "post",
+      url: `${backendLocation}/getAllData.php`,
+      data: formData,
+      success: result => {
+        if (result !== "") {
+          JSON.parse(result).map(el => {
+            delArr = scanFolder(el.id, el.type, delArr);
+          });
+        }
+      }
+    });
+  }
+  return delArr;
+}
+
+function remove(item) {
+  let id = item.id.slice(4);
+  let type = item.childNodes[1].innerHTML;
+  let ids = scanFolder(id, type);
+  setTimeout(() => {
+    let formData = { ids: ids };
+
+    $.ajax({
+      type: "post",
+      url: `${backendLocation}/delData.php`,
+      data: formData,
+      success: results => {
+        item.parentElement.removeChild(item);
+      }
+    });
+  }, 1000);
 }
