@@ -6,6 +6,10 @@ $targetDir = "./uploads/";
 $fileName = basename($_FILES["file"]["name"]);
 $targetFilePath = $targetDir . $fileName;
 $fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
+$path = $_POST["path"];
+if ($path === "root"){
+  $path = -1;
+}
 
 
 if(empty($_FILES["file"]["name"])){
@@ -21,7 +25,7 @@ if(!move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
 }
 
 $sql = "INSERT INTO root (name, type, parent)
-VALUES ('$fileName', 'File', -1)";
+VALUES ('$fileName', 'File', $path)";
 
 $result = requset($sql);
 

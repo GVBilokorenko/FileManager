@@ -23,19 +23,11 @@ function loadAll(path) {
   });
 }
 
-function loadLast() {
-  $.ajax({
-    url: `${backendLocation}/getLastData.php`,
-    success: result => {
-      createCard(JSON.parse(result)[0]);
-    }
-  });
-}
-
 function addFile() {
   let file = document.querySelector("#file").files[0];
   let formData = new FormData();
   formData.append("file", file);
+  formData.append("path", getPath(path));
 
   $.ajax({
     type: "post",
@@ -44,8 +36,9 @@ function addFile() {
     contentType: false,
     cache: false,
     processData: false,
+    dataType: "script",
     success: results => {
-      loadLast();
+      loadAll();
     }
   });
 }
@@ -65,7 +58,7 @@ function addFolder() {
 }
 
 function remove(item) {
-  let formData = "id=" + item.id.slice(4);
+  let formData = { id: item.id.slice(4), type: item.type };
 
   $.ajax({
     type: "post",
