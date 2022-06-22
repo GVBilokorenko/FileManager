@@ -1,13 +1,10 @@
 <?php
-include "./api.php";
+$fileName = $_POST["name"];
+$path = $_POST["path"];
+$newName = $_POST["newName"];
 
-$id = $_POST["id"];
-$name = $_POST["name"];
+$loc = $path . "/" . $fileName;
+$newLoc = $path . "/" . $newName;
 
-$sql = "UPDATE root
-SET name = '$name' 
-WHERE id = $id;";
-
-$result = requset($sql);
-
-echo $result;
+rename($loc, $newLoc);
+echo "The file ".$fileName. " has been successfully renamed!";

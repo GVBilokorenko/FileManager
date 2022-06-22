@@ -1,11 +1,15 @@
 <?php
-include "./api.php";
+$fileName = $_POST["name"];
+$path = $_POST["path"];
+$type = $_POST["type"];
 
-$ids = $_POST["ids"];
+$loc = $path . "/" . $fileName;
 
-foreach($ids as $id) {
-  $sql = "DELETE FROM root WHERE id = $id" ;
-  $result = requset($sql);
+if ($type == "Folder"){
+  array_map('unlink', glob("$loc/*"));
+  rmdir($loc);
+  echo "The folder ".$fileName. " has been successfully deleted!";
+} else {
+  unlink($loc);
+  echo "The file ".$fileName. " has been successfully deleted!";
 }
-
-echo $result;

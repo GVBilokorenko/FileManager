@@ -1,36 +1,13 @@
 <?php
-// Include the database configuration file
-include "./api.php";
-
-$targetDir = "./uploads/";
-$fileName = basename($_FILES["file"]["name"]);
-$targetFilePath = $targetDir . $fileName;
-$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
 $path = $_POST["path"];
-if ($path === "root"){
-  $path = -1;
-}
+$fileName = basename($_FILES["file"]["name"]);
 
 
-if(empty($_FILES["file"]["name"])){
-  die("Please select a file to upload!");
-}
+$loc = $path . "/" . $fileName;
 
-if(!in_array($fileType, ['jpg','png','jpeg','gif','pdf', 'txt'])){
-  die("Only JPG, JPEG, PNG, GIF, TXT, & PDF files are allowed to upload!");
-}
 
-if(!move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
+if(!move_uploaded_file($_FILES["file"]["tmp_name"], $loc)){
   die("There was an error while uploading your file!");
-}
-
-$sql = "INSERT INTO root (name, type, parent)
-VALUES ('$fileName', 'File', $path)";
-
-$result = requset($sql);
-
-if (!$result) {
-  die("File upload failed, please try again!");
 }
 
 echo "The file ".$fileName. " has been successfully uploaded!";

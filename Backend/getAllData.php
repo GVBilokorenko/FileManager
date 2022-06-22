@@ -1,26 +1,30 @@
 <?php
-include "./api.php";
-
-$path = $_POST["path"];
-if ($path === "root"){
-    $path = -1;
-}
-
-// echo $path;
-
-$sql = "SELECT id, name, type, parent, date 
-from root 
-where parent in ($path) 
-ORDER BY type DESC;";
-$result = requset($sql);
+$postPath = $_POST["path"];
 
 
-if (mysqli_num_rows($result) > 0) {
-    $resArr = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $resArr[] = ["id" => $row["id"], "name" => $row["name"], "type" => $row["type"], "parent" => $row["parent"], "date" => $row["date"]];
+$path    = __DIR__ . "/" . $postPath;
+$files = scandir($path);
+
+
+$resArr = [];
+$id = 0;
+$type = NULL;
+$date = NULL;
+foreach ($files as $file) {
+    if ($file != "." && $file != ".."){
+        if (is_file($path."/".$file)) {
+            $type = "File";
+        } else {
+            $type = "Folder";
+        }
+
+        if (file_exists($path."/".$file)) {
+            $date = date("d.m.y H:i:s", filemtime($path."/".$file));
+        }
+
+        $resArr[] = ["id" => $id, "name" => $file, "type" => $type, "parent" => $postPath, "date" => $date];
+        $id+=1;
     }
-    echo json_encode($resArr);
-} else {
-    echo null;
 }
+
+echo json_encode($resArr);

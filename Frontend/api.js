@@ -63,7 +63,7 @@ function createCard(el) {
   item.className = "item";
 
   let name = document.createElement("input");
-  name.className = el.type == "Folder" ? "name folder" : "name file";
+  name.className = el.type;
   name.placeholder = `${el.name}`;
   name.ondblclick = () => {
     setPath(el);
@@ -90,7 +90,7 @@ function createCard(el) {
   editButton.className = "removeButton";
   editButton.innerHTML = "e";
   editButton.onclick = () => {
-    rename(item, name.value);
+    rename(el, name.value);
   };
   item.appendChild(editButton);
 
@@ -98,7 +98,7 @@ function createCard(el) {
   remButton.className = "removeButton";
   remButton.innerHTML = "-";
   remButton.onclick = () => {
-    remove(item);
+    remove(el, item);
   };
   item.appendChild(remButton);
 
@@ -107,8 +107,7 @@ function createCard(el) {
 
 function getPath(path) {
   if (path !== "firstLoad") {
-    path = document.querySelector("#path").innerHTML.split("/");
-    path = path[path.length - 2];
+    path = document.querySelector("#path").innerHTML.slice(2, -1);
   } else {
     path = "root";
   }
@@ -117,7 +116,7 @@ function getPath(path) {
 
 function setPath(item) {
   if (item.type == "Folder") {
-    document.querySelector("#path").innerHTML += `${item.id}/`;
+    document.querySelector("#path").innerHTML += `${item.name}/`;
     document.querySelector("#showPath").innerHTML += `${item.name}/`;
     loadAll();
   }
@@ -135,48 +134,21 @@ function pathBack(path = document.querySelector("#path").innerHTML) {
   }
 }
 
-function scanFolder(id, type, delArr = []) {
-  delArr.push(id);
-  if (type == "Folder") {
-    let formData = "path=" + id;
+function remove(item, domItem) {
+  let formData = { path: getPath(path), name: item.name, type: item.type };
 
-    $.ajax({
-      type: "post",
-      url: `${backendLocation}/getAllData.php`,
-      data: formData,
-      success: result => {
-        if (result !== "") {
-          JSON.parse(result).map(el => {
-            delArr = scanFolder(el.id, el.type, delArr);
-          });
-        }
-      }
-    });
-  }
-  return delArr;
-}
-
-function remove(item) {
-  let id = item.id.slice(4);
-  let type = item.childNodes[1].innerHTML;
-  let ids = scanFolder(id, type);
-  setTimeout(() => {
-    let formData = { ids: ids };
-
-    $.ajax({
-      type: "post",
-      url: `${backendLocation}/delData.php`,
-      data: formData,
-      success: results => {
-        item.parentElement.removeChild(item);
-      }
-    });
-  }, 1000);
+  $.ajax({
+    type: "post",
+    url: `${backendLocation}/delData.php`,
+    data: formData,
+    success: results => {
+      domItem.parentElement.removeChild(domItem);
+    }
+  });
 }
 
 function rename(item, value) {
-  let id = item.id.slice(4);
-  let formData = { id: id, name: value };
+  let formData = { path: getPath(path), name: item.name, newName: value };
 
   $.ajax({
     type: "post",
